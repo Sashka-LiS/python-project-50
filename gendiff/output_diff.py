@@ -1,7 +1,4 @@
-from gendiff.find_diff import find_difference
-
-
-def format_key(key: str)-> str:
+def format_key(key: str) -> str:
     if key.startswith("added"):
         key = key.replace("added ", "  + ")
         return key
@@ -11,9 +8,9 @@ def format_key(key: str)-> str:
     else:
         key = f"    {key}"
         return key
-    
 
-def generate_diff(diff: dict)-> str:
+
+def generate_diff(diff: dict) -> str:
     strings = []
     for key, value in diff.items():
         key = format_key(key)

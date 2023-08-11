@@ -1,7 +1,7 @@
 from gendiff.get_data import get_data
 
 
-def find_difference(path_file1: str, path_file2: str)-> dict:
+def find_difference(path_file1: str, path_file2: str) -> dict:
     data1 = get_data(path_file1)
     data2 = get_data(path_file2)
     all_keys = sorted(set(data1.keys()).union(set(data2.keys())))
@@ -17,4 +17,3 @@ def find_difference(path_file1: str, path_file2: str)-> dict:
             diff.setdefault(f"deleted {key}", data1[key])
             diff.setdefault(f"added {key}", data2[key])
     return diff
-    

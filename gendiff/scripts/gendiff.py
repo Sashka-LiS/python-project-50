@@ -7,8 +7,8 @@ from gendiff.output_diff import generate_diff
 def main():
     args = parse_args()
     diff = find_difference(args.first_file, args.second_file)
-    result = generate_diff(diff)
-    print(result)
+    result = print(generate_diff(diff))
+    return result
 
 
 if __name__ == "__main__":
