@@ -15,4 +15,5 @@ def generate_diff(diff: dict) -> str:
     for key, value in diff.items():
         key = format_key(key)
         strings.append(f"{key}: {value}")
-    return "{\n" + "\n".join(strings) + "\n}"
+    result = "{\n" + "\n".join(strings) + "\n}"
+    return result 
