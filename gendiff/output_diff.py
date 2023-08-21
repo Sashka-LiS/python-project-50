@@ -16,4 +16,4 @@ def generate_diff(diff: dict) -> str:
         key = format_key(key)
         strings.append(f"{key}: {value}")
     result = "{\n" + "\n".join(strings) + "\n}"
-    return result 
+    return result
