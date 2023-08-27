@@ -1,7 +1,7 @@
 from gendiff.parser import get_file_extension, parse
 
 
-def generate_difference(first_file: str, second_file: str) -> str:
+def generate_diff(first_file: str, second_file: str) -> str:
     file1 = parse(first_file, file_extension=get_file_extension(first_file))
     file2 = parse(second_file, file_extension=get_file_extension(second_file))
     dict1 = {value: key for key, value in file1.items()}
