@@ -1,16 +1,16 @@
-from gendiff.constants import ADDED, REMOVED, UNCHANGED, UPDATED, TEMPLATE_STYLISH
+from gendiff.constants import ADDED, REMOVED, UNCHANGED, UPDATED, NESTED, TEMPLATE_STYLISH, TEMPLATE_NESTED
 from itertools import chain
 
 
-def stylish_view(diff: list) -> str:
+def render_stylish(diff: list) -> str:
     '''Отображает различие в формате stylish'''
 
-    result = _iter(diff)
+    result = iter_diff(diff)
 
     return result
 
 
-def _iter(diff: any, depth: int = 0) -> str:
+def iter_diff(diff: any, depth: int = 0) -> str:
     """Итерирует список узлов внутреннего представления разницы и возвращает строку разницы"""
 
     lines = []
@@ -18,25 +18,20 @@ def _iter(diff: any, depth: int = 0) -> str:
 
     for node in diff:
 
-        key = node["key"]
-        status = node["status"]
-        add_value = node["add_value"]
-        del_value = node["del_value"]
-        sign_add = "+"
-        sign_del = "-"
-        sign_unchanged = " "
-        
-        if status == ADDED:
-            lines.append(create_line(key, add_value, sign_add, depth))
-        elif status == REMOVED:
-            lines.append(create_line(key, del_value, sign_del, depth))
-        elif status == UNCHANGED:
-            lines.append(create_line(key, add_value, sign_unchanged, depth))
-        elif status == UPDATED:
-            lines.append(create_line(key, del_value, sign_del, depth))
-            lines.append(create_line(key, add_value, sign_add, depth))
+        if node["status"] == ADDED:
+            lines.append(create_line(node["key"], node["add_value"], "+", depth))
+        elif node["status"] == REMOVED:
+            lines.append(create_line(node["key"], node["del_value"], "-", depth))
+        elif node["status"] == UNCHANGED:
+            lines.append(create_line(node["key"], node["add_value"], " ", depth))
+        elif node["status"] == UPDATED:
+            lines.append(create_line(node["key"], node["del_value"], "-", depth))
+            lines.append(create_line(node["key"], node["add_value"], "+", depth))
+        elif node["status"] == NESTED:
+            diff = node["children"]
+            lines.append(TEMPLATE_NESTED.format(indent, node["key"], iter_diff(diff, depth + 1)))
 
-    strings = chain("{", lines, indent + "}")
+    strings = chain("{", lines, [indent + "}"])
     result = "\n".join(strings)
 
     return result
@@ -47,13 +42,30 @@ def create_line(key: any, value: any, sign: str, depth: int) -> str:
 
     line = []
     indent = "    " * depth
-    
-    line.append(TEMPLATE_STYLISH.format(indent, sign, key, convert(value)))
+
+    if isinstance(value, dict):
+        line.append(TEMPLATE_STYLISH.format(indent, sign, key, render_dict(value, depth + 1)))
+    else:
+        line.append(TEMPLATE_STYLISH.format(indent, sign, key, convert(value)))
 
     result = "\n".join(line)
 
     return result
 
+
+def render_dict(_dict: dict, depth: int) -> str:
+    """Представление словаря"""
+
+    lines = []
+    indent = "    " * depth
+
+    for key, value in _dict.items():
+        lines.append(create_line(key, value, " ", depth))
+
+    strings = chain("{", lines, [indent + "}"])
+    result = "\n".join(strings)
+
+    return result
 
 
 def convert(value: any) -> str:
@@ -61,6 +73,12 @@ def convert(value: any) -> str:
 
     if isinstance(value, bool):
         result = str(value).lower()
+    elif isinstance(value, int):
+        result = str(value)
+    elif isinstance(value, dict):
+        result = "[complex value]"
+    elif value is None:
+        result = "null"
     else:
         result = str(value)
 

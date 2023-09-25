@@ -1,5 +1,0 @@
-key: follow // status: removed // value: false
-key: host // status: unchanged // value: hexlet.io
-key: proxy // status: removed // value: 123.234.53.22
-key: timeout // status: updated // value: 50 -> 20
-key: verbose // status: added // value: true

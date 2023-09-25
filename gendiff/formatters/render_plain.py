@@ -1,24 +1,34 @@
-from gendiff.constants import ADDED, REMOVED, UNCHANGED, UPDATED, TEMPLATE_PLAIN, TEMPLATE_UPDATED_PLAIN
+from gendiff.constants import (ADDED,
+                               REMOVED,
+                               UPDATED,
+                               NESTED,
+
+                               TEMPLATE_PLAIN_PATH,
+                               TEMPLATE_PLAIN_ADDED,
+                               TEMPLATE_PLAIN_REMOVED,
+                               TEMPLATE_PLAIN_UPDATED)
 
 
-def plain_view(diff: list) -> str:
+def render_plain(diff: list, source: str = "") -> str:
+
     lines = []
 
     for node in diff:
 
-        key = node["key"]
-        status = node["status"]
-        add_value = node["add_value"]
-        del_value = node["del_value"]
+        if source:
+            path = TEMPLATE_PLAIN_PATH.format(source, node["key"])
+        else:
+            path = node["key"]
 
         if node["status"] == ADDED:
-            lines.append(TEMPLATE_PLAIN.format(key, status, convert(add_value)))
+            lines.append(TEMPLATE_PLAIN_ADDED.format(path, convert(node["add_value"])))
         elif node["status"] == REMOVED:
-            lines.append(TEMPLATE_PLAIN.format(key, status, convert(del_value)))
-        elif node["status"] == UNCHANGED:
-            lines.append(TEMPLATE_PLAIN.format(key, status, convert(add_value)))
+            lines.append(TEMPLATE_PLAIN_REMOVED.format(path))
         elif node["status"] == UPDATED:
-            lines.append(TEMPLATE_UPDATED_PLAIN.format(key, status, convert(del_value), convert(add_value)))
+            lines.append(TEMPLATE_PLAIN_UPDATED.format(path, convert(node["del_value"]), convert(node["add_value"])))
+        elif node["status"] == NESTED:
+            diff = node["children"]
+            lines.append(render_plain(diff, path))
 
     result = "\n".join(lines)
 
@@ -30,7 +40,13 @@ def convert(value: any) -> str:
 
     if isinstance(value, bool):
         result = str(value).lower()
-    else:
+    elif isinstance(value, int):
         result = str(value)
+    elif isinstance(value, dict):
+        result = "[complex value]"
+    elif value is None:
+        result = "null"
+    else:
+        result = f"'{str(value)}'"
 
     return result
