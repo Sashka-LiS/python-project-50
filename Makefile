@@ -7,6 +7,9 @@ build: check
 publish:
 	poetry publish --dry-run
 
+install_gendiff:
+	python3 -m pip install --user --force-reinstall dist/hexlet_code-0.1.0-py3-none-any.whl
+
 test:
 	poetry run pytest -vv
 
