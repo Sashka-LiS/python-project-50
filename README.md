@@ -47,4 +47,5 @@ make install_gendiff
 ### Вывод разницы между вложенными YAML файлами в формате "plain".
 [![asciicast](https://asciinema.org/a/dgFFTO1JvH5dMf1I2dYbunCda.svg)](https://asciinema.org/a/dgFFTO1JvH5dMf1I2dYbunCda)
 
-### Вывод разницы между файламе в формате JSON.
+### Вывод разницы между файлами в формате JSON.
+[![asciicast](https://asciinema.org/a/CAtDZ9q0vvYVis1D7gaV6koW8.svg)](https://asciinema.org/a/CAtDZ9q0vvYVis1D7gaV6koW8)
