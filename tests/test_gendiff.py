@@ -1,6 +1,6 @@
 import pytest
 from gendiff.gendiff import generate_diff
-import json
+
 
 @pytest.fixture
 def links():
