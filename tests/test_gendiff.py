@@ -22,7 +22,7 @@ def links():
         "result_tree_stylish": "tests/fixtures/result/result_tree_stylish.txt",
         "result_flat_json": "tests/fixtures/result/result_flat_json.txt",
         "result_tree_json": "tests/fixtures/result/result_tree_json.txt"
-}
+    }
 
     return files
 
